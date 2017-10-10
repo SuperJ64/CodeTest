@@ -21,10 +21,11 @@ require_once 'init/init.php';
 
 
             //set session data for later use;
-            $_SESSION['id'] = $user->id();
-            $_SESSION['fname'] = $fname;
-            $_SESSION['lname'] = $lname;
-            $_SESSION['email'] = $email;
+            Session::put('id', $user->id());
+            Session::put('fname', $fname);
+            Session::put('lname', $lname);
+            Session::put('email', $email);
+
 
             header("Location: dash.php");
 

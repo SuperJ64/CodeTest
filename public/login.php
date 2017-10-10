@@ -7,11 +7,12 @@ if (isset($_POST['email'])) {
     $pass = $user->password;
 
     if (password_verify($_POST['password'], $pass)) {
+
         //set session data for later use;
-        $_SESSION['id'] = $user->id;
-        $_SESSION['fname'] = $user->first_name;
-        $_SESSION['lname'] = $user->last_name;
-        $_SESSION['email'] = $user->email;
+        Session::put('id', $user->id);
+        Session::put('fname', $user->first_name);
+        Session::put('lname', $user->last_name);
+        Session::put('email', $user->email);
 
         header("Location: dash.php");
     } else {

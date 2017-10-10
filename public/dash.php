@@ -1,7 +1,7 @@
 <?php
-session_start();
+require_once 'init/init.php';
 //check if they're logged in, if not send them back to login page.
-if (!isset($_SESSION['id'])) {
+if (!Session::exists('id')) {
     header("Location: login.php");
 }
 
