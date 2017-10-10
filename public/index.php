@@ -1,6 +1,12 @@
 <?php
 require_once 'init/init.php';
 
+$users = DB::getInstance()->query("SELECT * FROM users");
+if($users->error()) {
+    echo 'No Users';
+} else {
+    echo $users->first()->email;
+}
 
     if (isset($_POST['fname'])) {
         include 'partials/datalogin.php';
