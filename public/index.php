@@ -3,29 +3,22 @@ require_once 'init/init.php';
 
     if (isset($_POST['fname'])) {
 
-        $user = DB::getInstance()->get('SELECT email FROM users WHERE email=?', [$_POST['email']]);
+        $user = new User();
+        $found = $user->find($_POST['email']);
 
-        if ($user->count() > 0) {
+        if ($found) {
             $emailErr = "This email is already being used";
         } else {
             $email = $_POST['email'];
-            $pass = $_POST['password'];
+            $password = $_POST['password'];
             $fname = $_POST['fname'];
             $lname = $_POST['lname'];
 
             //encrypt password
-            $pass = password_hash($pass, PASSWORD_BCRYPT);
+            $pass = password_hash($password, PASSWORD_BCRYPT);
 
-            $user = DB::getInstance()->insert('INSERT INTO users (email, password, First_Name, Last_name) VALUES (?,?,?,?)',
-                [$email, $pass, $fname, $lname]);
-
-
-            //set session data for later use;
-            Session::put('id', $user->id());
-            Session::put('fname', $fname);
-            Session::put('lname', $lname);
-            Session::put('email', $email);
-
+            $user->create([$email, $pass, $fname, $lname]);
+            $user->login($email, $password);
 
             header("Location: dash.php");
 

@@ -3,17 +3,8 @@ require_once 'init/init.php';
 
 if (isset($_POST['email'])) {
 
-    $user = DB::getInstance()->get('SELECT id, email, first_name, last_name, password FROM users WHERE email=?', [$_POST['email']])->first();
-    $pass = $user->password;
-
-    if (password_verify($_POST['password'], $pass)) {
-
-        //set session data for later use;
-        Session::put('id', $user->id);
-        Session::put('fname', $user->first_name);
-        Session::put('lname', $user->last_name);
-        Session::put('email', $user->email);
-
+    $user = new User();
+    if ($user->login($_POST['email'], $_POST['password'])) {
         header("Location: dash.php");
     } else {
         $badLogin = "Incorrect email or password, try again";
