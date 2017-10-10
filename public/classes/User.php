@@ -27,14 +27,27 @@ class User {
 
         if (password_verify($password, $user->password)) {
             //set session data for later use;
-            Session::put('id', $user->id);
-            Session::put('fname', $user->first_name);
-            Session::put('lname', $user->last_name);
-            Session::put('email', $user->email);
+            Session::put('user', $user);
 
             return true;
         }
 
         return false;
+    }
+
+    public function addresses() {
+        $user = $this->find(Session::get('user')->email);
+
+        $stmt = 'SELECT a.street, a.city, a.state FROM addresses AS a LEFT OUTER JOIN user_address AS ua ON a.id = ua.address_id LEFT OUTER JOIN users AS u ON ua.user_id = u.id WHERE u.id = ?';
+
+        $addresses = $this->_db->get($stmt, [$user->id]);
+
+        return $addresses->results();
+
+    }
+
+    //add address to list of addresses validated by user
+    public function addAddress($id) {
+        $this->_db->insert('INSERT INTO user_address (user_id, address_id) VALUES (?,?)', [Session::get('user')->id, $id]);
     }
 }

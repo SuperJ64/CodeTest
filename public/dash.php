@@ -1,16 +1,20 @@
 <?php
 require_once 'init/init.php';
 //check if they're logged in, if not send them back to login page.
-if (!Session::exists('id')) {
+if (!Session::exists('user')) {
     header("Location: login.php");
 }
 
-//get all the addresses validated by this user
-include 'partials/datalogin.php';
+if (isset($_POST['street'])) {
+    $address = new Address();
+
+    $id = $address->getID($_POST['street'], $_POST['city'], $_POST['state']);
+    echo $id;
+}
 
 //cache them
+$cache = Cache::getInstance();
 
-//set session flag so I know i already cached the addresses.
 
 
 ?>
@@ -26,7 +30,7 @@ include 'partials/datalogin.php';
 
             <a class="navbar-brand" href="dash.php">
                 <?php
-                    echo "Weclome ".$_SESSION['fname']." ".$_SESSION['lname']."!";
+                    echo "Weclome ".Session::get('user')->first_name." ".Session::get('user')->last_name."!";
                 ?>
             </a>
             <a class="pull-right" href="logout.php">Logout</a>
@@ -37,13 +41,21 @@ include 'partials/datalogin.php';
 
 <div class="mx-auto">
     <div class="card text-center">
-        <div class="card-header">
+        <div class="card-header">Validated Address</div>
+            <form method="post">
 
-        </div>
-        <div class="card-body">
-            <form>
+                <label for="street">Street</label>
+                <input type="text" name="street" required>
 
+                <label for="city">City</label>
+                <input type="text" name="city" required>
+
+                <label for="state">State</label>
+                <input type="text" name="state" required>
+
+                <input type="submit" value="Validate">
             </form>
+        <div class="card-body">
         </div>
     </div>
 </div>
