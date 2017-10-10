@@ -1,27 +1,12 @@
 <?php
 require_once 'init/init.php';
 
-$users = DB::getInstance()->query("SELECT * FROM users");
-if($users->error()) {
-    echo 'No Users';
-} else {
-    echo $users->first()->email;
-}
-
     if (isset($_POST['fname'])) {
-        include 'partials/datalogin.php';
 
-        $stmt = $conn->prepare("SELECT email FROM users WHERE email=?");
-        $stmt->bind_param('s', $_POST['email']);
-        $stmt->execute();
-        $stmt->bind_result($result);
-        $stmt->fetch();
+        $user = DB::getInstance()->get('SELECT email FROM users WHERE email=?', [$_POST['email']]);
 
-        $stmt->close();
-
-        if (isset($result)) {
+        if ($user->count() > 0) {
             $emailErr = "This email is already being used";
-            $conn->close();
         } else {
             $email = $_POST['email'];
             $pass = $_POST['password'];
@@ -31,17 +16,12 @@ if($users->error()) {
             //encrypt password
             $pass = password_hash($pass, PASSWORD_BCRYPT);
 
-            $stmt = $conn->prepare('INSERT INTO users (email, password, First_Name, Last_name) VALUES (?,?,?,?)');
-            $stmt->bind_param("ssss", $email, $pass, $fname, $lname);
-            $stmt->execute();
-            $stmt->close();
+            $user = DB::getInstance()->insert('INSERT INTO users (email, password, First_Name, Last_name) VALUES (?,?,?,?)',
+                [$email, $pass, $fname, $lname]);
 
-            $id = $conn->insert_id;
-
-            $conn->close();
 
             //set session data for later use;
-            $_SESSION['id'] = $id;
+            $_SESSION['id'] = $user->id();
             $_SESSION['fname'] = $fname;
             $_SESSION['lname'] = $lname;
             $_SESSION['email'] = $email;

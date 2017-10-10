@@ -1,24 +1,17 @@
 <?php
-session_start();
+require_once 'init/init.php';
+
 if (isset($_POST['email'])) {
-    include 'partials/datalogin.php';
 
-    $stmt = $conn->prepare('SELECT id, email, First_Name, Last_Name, password FROM users WHERE email=?');
-    $stmt->bind_param('s', $_POST['email']);
-    $stmt->execute();
-    $stmt->bind_result($id, $email, $fname, $lname, $pass);
-    $stmt->fetch();
-
-    $stmt->close();
-
-    $conn->close();
+    $user = DB::getInstance()->get('SELECT id, email, first_name, last_name, password FROM users WHERE email=?', [$_POST['email']])->first();
+    $pass = $user->password;
 
     if (password_verify($_POST['password'], $pass)) {
         //set session data for later use;
-        $_SESSION['id'] = $id;
-        $_SESSION['fname'] = $fname;
-        $_SESSION['lname'] = $lname;
-        $_SESSION['email'] = $email;
+        $_SESSION['id'] = $user->id;
+        $_SESSION['fname'] = $user->first_name;
+        $_SESSION['lname'] = $user->last_name;
+        $_SESSION['email'] = $user->email;
 
         header("Location: dash.php");
     } else {

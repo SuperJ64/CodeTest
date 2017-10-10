@@ -10,6 +10,7 @@ class DB {
         $_query,
         $_error = false,
         $_results,
+        $_id,
         $_count = 0;
 
     private function __construct() {
@@ -30,8 +31,23 @@ class DB {
         return self::$_instance;
     }
 
-    //query the database
-    public function query($sql, $params = array()) {
+    //insert data into database
+    public function insert($sql, $params = array()) {
+        $this->_error = false;
+
+        if ($this->_query = $this->_pdo->prepare($sql)) {
+            $this->_pdo->beginTransaction();
+            if ($this->_query->execute($params)) {
+                $this->_id = $this->_pdo->lastInsertId();
+                $this->_pdo->commit();
+            }
+        }
+
+        return $this;
+    }
+
+    //get data from database
+    public function get($sql, $params = array()) {
         $this->_error = false;
 
         //check if we can prepare the statement for binding
@@ -72,4 +88,13 @@ class DB {
     public function first() {
         return $this->results()[0];
     }
+
+    public function count() {
+        return $this->_count;
+    }
+
+    public function id() {
+        return $this->_id;
+    }
+
 }
