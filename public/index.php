@@ -1,5 +1,6 @@
 <?php
-    session_start();
+require_once 'init/init.php';
+
 
     if (isset($_POST['fname'])) {
         include 'partials/datalogin.php';
