@@ -39,10 +39,7 @@
             $_SESSION['lname'] = $lname;
             $_SESSION['email'] = $email;
 
-            $url = "http://".$_SERVER['SERVER_NAME']."/dash.php";
-
-            header("Location: ".$url);
-
+            header("Location: dash.php");
 
         }
 
@@ -86,7 +83,7 @@
             </form>
         </div>
         <div class="card-footer text-muted">
-            Or Log In
+            <a href="login.php">Or Log in</a>
         </div>
     </div>
 </div>
