@@ -5,17 +5,19 @@ if (!Session::exists('user')) {
     header("Location: login.php");
 }
 
+$user = new User();
+
 if (isset($_POST['street'])) {
     $address = new Address();
 
     $id = $address->getID($_POST['street'], $_POST['city'], $_POST['state']);
-    echo $id;
+
+    if (!is_null($id)) {
+        $user->addAddress($id);
+    }
 }
 
-//cache them
-$cache = Cache::getInstance();
-
-
+$addresses = $user->addresses();
 
 ?>
 
@@ -30,7 +32,7 @@ $cache = Cache::getInstance();
 
             <a class="navbar-brand" href="dash.php">
                 <?php
-                    echo "Weclome ".Session::get('user')->first_name." ".Session::get('user')->last_name."!";
+                echo "Weclome " . Session::get('user')->first_name . " " . Session::get('user')->last_name . "!";
                 ?>
             </a>
             <a class="pull-right" href="logout.php">Logout</a>
@@ -41,7 +43,8 @@ $cache = Cache::getInstance();
 
 <div class="mx-auto">
     <div class="card text-center">
-        <div class="card-header">Validated Address</div>
+        <div class="card-header">Validate Address</div>
+        <div class="card-body">
             <form method="post">
 
                 <label for="street">Street</label>
@@ -55,7 +58,23 @@ $cache = Cache::getInstance();
 
                 <input type="submit" value="Validate">
             </form>
+
+        </div>
+    </div>
+
+    <div class="card text-center">
+        <div class="card-header">Validated Addresses</div>
         <div class="card-body">
+            <ul>
+                <?php
+                foreach ($addresses as $address) {
+                    echo '<li>';
+                    echo $address->street.", ".$address->city.", ".$address->state;
+                    echo '</li>';
+                }
+
+                ?>
+            </ul>
         </div>
     </div>
 </div>
