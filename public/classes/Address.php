@@ -44,28 +44,60 @@ class Address
         $id = $this->_cache->get($key);
 
         if (is_null($id)) {
-            $curl = curl_init();
 
-            $url = Config::get('google/url')."?".Config::get('google/api_key')."&address=".urlencode($key);
-            curl_setopt($curl, CURLOPT_URL, $url);
-            curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
-            $result = curl_exec($curl);
+            //not in cache, check if in db
+            $id = $this->inDB($street, $city, $state);
+            if( is_null($id) ) {
 
-            curl_close($curl);
-            $result = json_decode($result);
+                //if not in either call api
+                $curl = curl_init();
 
-            if (isset($result->results[0]->partial_match)) {
-                //google will return partial match for all results that aren't a direct match
-                return null;
+                $url = Config::get('google/url') . "?" . Config::get('google/api_key') . "&address=" . urlencode($key);
+                curl_setopt($curl, CURLOPT_URL, $url);
+                curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+                $result = curl_exec($curl);
+
+                curl_close($curl);
+                $result = json_decode($result);
+
+                if (isset($result->results[0]->partial_match)) {
+                    //google will return partial match for all results that aren't a direct match
+                    return null;
+                }
+
+                //add to db
+                $id = $this->create([$this->dbFormat($street), $this->dbFormat($city), strtoupper($this->dbFormat($state))]);
             }
-
-            $id = $this->create([ucwords($street),ucwords($city), strtoupper($state)]);
+            //add to cache
             $this->_cache->add($key, $id);
 
 
         }
 
         return $id;
+    }
+
+    //helper function - format string for db storage
+    //removes all punctuation and converts first letter of each word to cap.
+    private function dbFormat ($string) {
+       $temp = preg_replace("/[^a-zA-Z0-9]+/", "", $string);
+       return ucwords($temp);
+    }
+
+    //helper function - check if address is in db
+    //returns id if it is, else return null.
+    private function inDB($street, $city, $state) {
+        $st = $this->dbFormat($street);
+        $c = $this->dbFormat($city);
+        $s = strtoupper($this->dbFormat($state));
+
+        $result = $this->_db->get('SELECT * FROM addresses WHERE street=? and city=? and state=?', [$st, $c, $s]);
+
+        if ($result->count() >0 ) {
+            return $result->first()->id;
+        }
+
+        return null;
     }
 
 }

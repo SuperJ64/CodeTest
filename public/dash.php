@@ -22,6 +22,8 @@ if (isset($_POST['token'])) {
 }
 
 $addresses = $user->addresses();
+
+//since i'm pulling them up anyway might as well cache all the addresses user has verified.
 if (!Session::exists('cache_address')) {
     foreach ($addresses as $address) {
         $key = Address::keyify($address->street, $address->city, $address->state);
