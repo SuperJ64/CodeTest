@@ -8,10 +8,6 @@ $GLOBALS['config'] = array(
       'password' => 'root',
       'db' => 'scotchbox'
   ),
-
-    'session' => array(
-        'session_name' => 'user'
-    ),
     'redis' => array(
         "scheme" => "tcp",
         "host" => "localhost",
