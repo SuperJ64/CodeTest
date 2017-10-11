@@ -24,16 +24,22 @@ class Address
         return $address->id();
     }
 
-    //get the table id for an address, if its cached
-    //otherwise validate, if valid create address and return id else return null (address not valid)
-    public function getID($street, $city, $state)
-    {
+    //turn an address into a key
+    public static function keyify($street, $city, $state) {
         $key = $street . ", " . $city . ", " . $state;
 
         //strip all punctuation and convert all characters to lowercase to eliminate possible differences
         $key = preg_replace("/[^a-zA-Z0-9]+/", "", $key);
         $key = strtolower($key);
 
+        return $key;
+    }
+
+    //get the table id for an address, if its cached
+    //otherwise validate, if valid create address and return id else return null (address not valid)
+    public function getID($street, $city, $state)
+    {
+        $key = $this->keyify($street, $city, $state);
 
         $id = $this->_cache->get($key);
 

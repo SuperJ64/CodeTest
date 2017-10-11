@@ -38,7 +38,7 @@ class User {
     public function addresses() {
         $user = $this->find(Session::get('user')->email);
 
-        $stmt = 'SELECT a.street, a.city, a.state FROM addresses AS a LEFT OUTER JOIN user_address AS ua ON a.id = ua.address_id LEFT OUTER JOIN users AS u ON ua.user_id = u.id WHERE u.id = ? ORDER BY ua.created DESC ';
+        $stmt = 'SELECT a.id, a.street, a.city, a.state FROM addresses AS a LEFT OUTER JOIN user_address AS ua ON a.id = ua.address_id LEFT OUTER JOIN users AS u ON ua.user_id = u.id WHERE u.id = ? ORDER BY ua.created DESC ';
 
         $addresses = $this->_db->get($stmt, [$user->id]);
 

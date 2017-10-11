@@ -1,7 +1,8 @@
 <?php
 require_once 'init/init.php';
 
-    if (isset($_POST['fname'])) {
+if (isset($_POST['token'])) {
+    if (Token::check($_POST['token'])) {
 
         $user = new User();
         $found = $user->find($_POST['email']);
@@ -27,6 +28,8 @@ require_once 'init/init.php';
 
 
     }
+}
+
 ?>
 
 <!DOCTYPE html>
@@ -46,7 +49,7 @@ require_once 'init/init.php';
                         <div class="form-group">
                             <label for="fname">First Name</label>
                             <input class="form-control" type="text" name="fname" required
-                            <?php if (isset($fname)) echo 'value='.$fname ?>
+                                <?php if (isset($fname)) echo 'value=' . $fname ?>
                             >
                         </div>
 
@@ -54,18 +57,18 @@ require_once 'init/init.php';
                         <div class="form-group">
                             <label for="lname">Last Name</label>
                             <input class="form-control" type="text" name="lname" required
-                                <?php if (isset($lname)) echo 'value='.$lname ?>
+                                <?php if (isset($lname)) echo 'value=' . $lname ?>
                             >
                         </div>
 
                         <div class="form-group">
                             <label for="email">Email</label>
                             <input class="form-control" type="email" name="email" required
-                                <?php if (isset($email)) echo 'value='.$email ?>
+                                <?php if (isset($email)) echo 'value=' . $email ?>
                             >
                             <?php
                             if (isset($emailErr)) {
-                                echo '<div class="text-danger">'.$emailErr.'</div>';
+                                echo '<div class="text-danger">' . $emailErr . '</div>';
                             }
 
                             ?>
@@ -75,6 +78,8 @@ require_once 'init/init.php';
                             <label for="password">Password</label>
                             <input class="form-control" type="password" name="password" required>
                         </div>
+
+                        <input type="hidden" name="token" value="<?php echo Token::generate() ?>">
 
                         <input class="btn btn-primary" type="submit" value="Register">
 

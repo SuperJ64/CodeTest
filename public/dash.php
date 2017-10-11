@@ -7,19 +7,29 @@ if (!Session::exists('user')) {
 
 $user = new User();
 
-if (isset($_POST['street'])) {
-    $address = new Address();
+if (isset($_POST['token'])) {
+    if (Token::check($_POST['token'])) {
+        $address = new Address();
 
-    $id = $address->getID($_POST['street'], $_POST['city'], $_POST['state']);
+        $id = $address->getID($_POST['street'], $_POST['city'], $_POST['state']);
 
-    if (!is_null($id)) {
-        $user->addAddress($id);
-    } else {
-        $invalid = "This address is either incomplete or invalid, please try again.";
+        if (!is_null($id)) {
+            $user->addAddress($id);
+        } else {
+            $invalid = "This address is either incomplete or invalid, please try again.";
+        }
     }
 }
 
 $addresses = $user->addresses();
+if (!Session::exists('cache_address')) {
+    foreach ($addresses as $address) {
+        $key = Address::keyify($address->street, $address->city, $address->state);
+        Cache::getInstance()->add($key, $address->id);
+    }
+
+    Session::put('cache_address', true);
+}
 
 ?>
 
@@ -57,6 +67,7 @@ $addresses = $user->addresses();
                         <label class="sr-only" for="state">State</label>
                         <input class="form-control mb-2 mr-2" type="text" name="state" placeholder="State" required>
 
+                         <input type="hidden" name="token" value="<?php echo Token::generate()?>">
 
                         <input class="btn btn-primary mb-2" type="submit" value="Validate">
 

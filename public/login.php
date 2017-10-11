@@ -1,15 +1,18 @@
 <?php
 require_once 'init/init.php';
 
-if (isset($_POST['email'])) {
+if (isset($_POST['token'])) {
+    if (Token::check($_POST['token'])) {
 
-    $user = new User();
-    if ($user->login($_POST['email'], $_POST['password'])) {
-        header("Location: dash.php");
-    } else {
-        $badLogin = "Incorrect email or password, try again";
+        $user = new User();
+        if ($user->login($_POST['email'], $_POST['password'])) {
+            header("Location: dash.php");
+        } else {
+            $badLogin = "Incorrect email or password, try again";
+        }
     }
 }
+
 
 ?>
 
@@ -30,11 +33,10 @@ if (isset($_POST['email'])) {
                     <form method="post">
 
 
-
                         <div class="form-group text-center">
                             <?php
                             if (isset($badLogin)) {
-                                echo '<div class="alert-danger">'.$badLogin.'</div>';
+                                echo '<div class="alert-danger">' . $badLogin . '</div>';
                             }
 
                             ?>
@@ -49,6 +51,8 @@ if (isset($_POST['email'])) {
                             <label for="password">Password</label>
                             <input class="form-control" type="password" name="password">
                         </div>
+
+                        <input type="hidden" name="token" value="<?php echo Token::generate() ?>">
 
                         <input class="btn btn-primary" type="submit" value="Login">
                     </form>

@@ -1,12 +1,19 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: mikew
- * Date: 10/10/2017
- * Time: 12:23 PM
- */
 
-class Token
-{
+class Token {
+
+    public static function generate() {
+        return Session::put('token', md5(uniqid()));
+    }
+
+    public static function check($token) {
+
+        if(Session::exists('token') && $token === Session::get('token')) {
+            Session::delete('token');
+            return true;
+        }
+
+        return false;
+    }
 
 }
