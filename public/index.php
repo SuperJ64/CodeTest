@@ -6,13 +6,14 @@ require_once 'init/init.php';
         $user = new User();
         $found = $user->find($_POST['email']);
 
+        $email = $_POST['email'];
+        $password = $_POST['password'];
+        $fname = $_POST['fname'];
+        $lname = $_POST['lname'];
+
         if ($found) {
             $emailErr = "This email is already being used";
         } else {
-            $email = $_POST['email'];
-            $password = $_POST['password'];
-            $fname = $_POST['fname'];
-            $lname = $_POST['lname'];
 
             //encrypt password
             $pass = password_hash($password, PASSWORD_BCRYPT);
@@ -44,18 +45,24 @@ require_once 'init/init.php';
 
                         <div class="form-group">
                             <label for="fname">First Name</label>
-                            <input class="form-control" type="text" name="fname" required>
+                            <input class="form-control" type="text" name="fname" required
+                            <?php if (isset($fname)) echo 'value='.$fname ?>
+                            >
                         </div>
 
 
                         <div class="form-group">
                             <label for="lname">Last Name</label>
-                            <input class="form-control" type="text" name="lname" required>
+                            <input class="form-control" type="text" name="lname" required
+                                <?php if (isset($lname)) echo 'value='.$lname ?>
+                            >
                         </div>
 
                         <div class="form-group">
                             <label for="email">Email</label>
-                            <input class="form-control" type="email" name="email" required>
+                            <input class="form-control" type="email" name="email" required
+                                <?php if (isset($email)) echo 'value='.$email ?>
+                            >
                             <?php
                             if (isset($emailErr)) {
                                 echo '<div class="text-danger">'.$emailErr.'</div>';

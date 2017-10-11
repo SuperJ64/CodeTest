@@ -14,6 +14,8 @@ if (isset($_POST['street'])) {
 
     if (!is_null($id)) {
         $user->addAddress($id);
+    } else {
+        $invalid = "This address is either incomplete or invalid, please try again.";
     }
 }
 
@@ -58,9 +60,13 @@ $addresses = $user->addresses();
 
                         <input class="btn btn-primary mb-2" type="submit" value="Validate">
 
-
-
             </form>
+            <?php
+            if (isset($invalid)) {
+                echo '<div class="alert-danger" role="alert">'.$invalid.'</div>';
+            }
+
+            ?>
 
         </div>
     </div>

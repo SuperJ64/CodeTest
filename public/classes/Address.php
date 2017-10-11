@@ -19,6 +19,7 @@ class Address
 
     private function create($fields)
     {
+
         $address = $this->_db->insert('INSERT INTO addresses (street, city, state) VALUES (?,?,?)', $fields);
         return $address->id();
     }
@@ -28,6 +29,12 @@ class Address
     public function getID($street, $city, $state)
     {
         $key = $street . ", " . $city . ", " . $state;
+
+        //strip all punctuation and convert all characters to lowercase to eliminate possible differences
+        $key = preg_replace("/[^a-zA-Z0-9]+/", "", $key);
+        $key = strtolower($key);
+
+
         $id = $this->_cache->get($key);
 
         if (is_null($id)) {
@@ -46,7 +53,7 @@ class Address
                 return null;
             }
 
-            $id = $this->create([$street,$city, $state]);
+            $id = $this->create([ucwords($street),ucwords($city), strtoupper($state)]);
             $this->_cache->add($key, $id);
 
 
