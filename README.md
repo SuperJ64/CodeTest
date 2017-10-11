@@ -20,12 +20,12 @@ or you drop the public folder on a server with the following installed
 note: run tables.sql to set up db tables.
 
 ###Folder Structure
-    Root - vagrant config files
-        Public - application
-        classes - php classes used in application
-        css - bootstrap files
-        init - config information
-        partials - header and footer for pates
+* Root - vagrant config files
+  * Public - application
+    * classes - php classes used in applicatio
+    * css - bootstrap files
+    * init - config information
+    * partials - header and footer for pates
         
 Configuration information can be found in the init.php file if yo
 u need to change something for any reason.
