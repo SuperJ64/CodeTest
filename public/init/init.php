@@ -16,6 +16,8 @@ $GLOBALS['config'] = array(
         "scheme" => "tcp",
         "host" => "localhost",
         "port" =>  6379,
+        "maxmemory" => "2mb",
+        "maxmemory-policy" => "allkeys-lru",
         "persistent" => 1
     ),
     'google' => array(
