@@ -60,13 +60,23 @@ class Address
                 curl_close($curl);
                 $result = json_decode($result);
 
-                if (isset($result->results[0]->partial_match)) {
-                    //google will return partial match for all results that aren't a direct match
-                    return null;
+                //in the results if the status is okay we found a match
+                //check the type, if its a route (a road) then reject.
+                if ($result->status === "OK") {
+                    echo "THIS IS OK";
+
+                    $data = $result->results[0];
+
+                    if ( $data->types[0] != "route") {
+
+                        //add to db
+                        $id = $this->create([$this->dbFormat($street), $this->dbFormat($city), strtoupper($this->dbFormat($state))]);
+                    } else {
+                        return null;
+                    }
                 }
 
-                //add to db
-                $id = $this->create([$this->dbFormat($street), $this->dbFormat($city), strtoupper($this->dbFormat($state))]);
+
             }
             //add to cache
             $this->_cache->add($key, $id);
@@ -80,7 +90,7 @@ class Address
     //helper function - format string for db storage
     //removes all punctuation and converts first letter of each word to cap.
     private function dbFormat ($string) {
-       $temp = preg_replace("/[^a-zA-Z0-9]+/", "", $string);
+       $temp = preg_replace("/[^a-zA-Z 0-9]+/", "", $string);
        return ucwords($temp);
     }
 

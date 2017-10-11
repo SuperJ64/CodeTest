@@ -16,6 +16,10 @@ if (isset($_POST['token'])) {
         if (!is_null($id)) {
             $user->addAddress($id);
         } else {
+            $street = $_POST['street'];
+            $city = $_POST['city'];
+            $state = $_POST['state'];
+
             $invalid = "This address is either incomplete or invalid, please try again.";
         }
     }
@@ -49,15 +53,21 @@ $addresses = $user->addresses();
 
 
                         <label class="sr-only" for="street">Street</label>
-                        <input class="form-control mb-2 mr-2" type="text" name="street" placeholder="Street" required>
+                        <input class="form-control mb-2 mr-2" type="text" name="street" placeholder="Street" required
+                            <?php if (isset($street)) echo "value=".$street ?>
+                        >
 
 
                         <label class="sr-only" for="city">City</label>
-                        <input class="form-control mb-2 mr-2" type="text" name="city" placeholder="City" required>
+                        <input class="form-control mb-2 mr-2" type="text" name="city" placeholder="City" required
+                            <?php if (isset($city)) echo "value=".$city ?>
+                        >
 
 
                         <label class="sr-only" for="state">State</label>
-                        <input class="form-control mb-2 mr-2" type="text" name="state" placeholder="State" required>
+                        <input class="form-control mb-2 mr-2" type="text" name="state" placeholder="State" required
+                            <?php if (isset($state)) echo "value=".$state ?>
+                        >
 
                          <input type="hidden" name="token" value="<?php echo Token::generate()?>">
 
