@@ -26,49 +26,52 @@ $addresses = $user->addresses();
 <?php include 'partials/header.php' ?>
 
 <body>
-<nav class="navbar navbar-default navbar-static-top">
+<nav class="navbar navbar-dark bg-dark">
     <div class="container">
-        <div class="navbar-header">
-
-            <a class="navbar-brand" href="dash.php">
-                <?php
-                echo "Weclome " . Session::get('user')->first_name . " " . Session::get('user')->last_name . "!";
-                ?>
-            </a>
-            <a class="pull-right" href="logout.php">Logout</a>
-        </div>
-
+        <a class="navbar-brand" href="dash.php">
+            <?php
+            echo "Weclome " . Session::get('user')->first_name . " " . Session::get('user')->last_name . "!";
+            ?>
+        </a>
+        <a class="pull-right" href="logout.php">Logout</a>
     </div>
 </nav>
 
-<div class="mx-auto">
-    <div class="card text-center">
+<div class="container">
+    <div class="card address-form-card">
         <div class="card-header">Validate Address</div>
         <div class="card-body">
-            <form method="post">
+            <form class="form-inline" method="post">
 
-                <label for="street">Street</label>
-                <input type="text" name="street" required>
 
-                <label for="city">City</label>
-                <input type="text" name="city" required>
+                        <label class="sr-only" for="street">Street</label>
+                        <input class="form-control mb-2 mr-2" type="text" name="street" placeholder="Street" required>
 
-                <label for="state">State</label>
-                <input type="text" name="state" required>
 
-                <input type="submit" value="Validate">
+                        <label class="sr-only" for="city">City</label>
+                        <input class="form-control mb-2 mr-2" type="text" name="city" placeholder="City" required>
+
+
+                        <label class="sr-only" for="state">State</label>
+                        <input class="form-control mb-2 mr-2" type="text" name="state" placeholder="State" required>
+
+
+                        <input class="btn btn-primary mb-2" type="submit" value="Validate">
+
+
+
             </form>
 
         </div>
     </div>
 
-    <div class="card text-center">
+    <div class="card address-form-card">
         <div class="card-header">Validated Addresses</div>
         <div class="card-body">
-            <ul>
+            <ul class="list-group">
                 <?php
                 foreach ($addresses as $address) {
-                    echo '<li>';
+                    echo '<li class="list-group-item">';
                     echo $address->street.", ".$address->city.", ".$address->state;
                     echo '</li>';
                 }

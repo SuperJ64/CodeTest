@@ -19,32 +19,45 @@ if (isset($_POST['email'])) {
 <?php include 'partials/header.php' ?>
 
 <body>
-<div class="mx-auto">
-    <div class="card text-center">
-        <div class="card-header">
-            Log In
-        </div>
-        <div class="card-body">
-            <form method="post">
 
-                <?php
-                if (isset($badLogin)) {
-                    echo '<span class="error">'.$badLogin.'</span>';
-                }
+<div class="container">
+    <div class="row">
+        <div class="col-md-8 mx-auto">
+            <div class="card login-card">
+                <div class="card-header text-center">Log In</div>
 
-                ?>
+                <div class="card-body">
+                    <form method="post">
 
-                <label for="email">Email</label>
-                <input type="email" name="email" required>
 
-                <label for="password">Password</label>
-                <input type="password" name="password">
 
-                <input type="submit" value="Login">
-            </form>
-        </div>
-        <div class="card-footer text-muted">
-            <a href="index.php">Or Register new account</a>
+                        <div class="form-group text-center">
+                            <?php
+                            if (isset($badLogin)) {
+                                echo '<div class="alert-danger">'.$badLogin.'</div>';
+                            }
+
+                            ?>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="email">Email</label>
+                            <input class="form-control" type="email" name="email" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="password">Password</label>
+                            <input class="form-control" type="password" name="password">
+                        </div>
+
+                        <input class="btn btn-primary" type="submit" value="Login">
+                    </form>
+                </div>
+
+                <div class="card-footer text-center">
+                    <a href="index.php">Or Register new account</a>
+                </div>
+            </div>
         </div>
     </div>
 </div>
